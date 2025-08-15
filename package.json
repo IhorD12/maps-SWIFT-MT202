@@ -1,7 +1,16 @@
 {
+  "name": "maps-swift-mt202",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "lint:js": "eslint --ext .js,.ts . || true"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.1.0",
-    "hardhat": "^3.0.0"
+    "hardhat": "^3.0.0",
+    "eslint": "^8.0.0"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.4.0"

@@ -8,12 +8,12 @@ describe("MT202Settlement", function () {
         [owner, addr1, addr2] = await ethers.getSigners();
 
         const MockTokenFactory = await ethers.getContractFactory("MockToken");
-        mockToken = await MockTokenFactory.deploy("Mock Token", "MTK");
+    mockToken = await MockTokenFactory.deploy("Mock Token", "MTK");
 
-        const MT202SettlementFactory = await ethers.getContractFactory("MT202Settlement");
-        mt202Settlement = await MT202SettlementFactory.deploy(mockToken.target);
+    const MT202SettlementFactory = await ethers.getContractFactory("MT202Settlement");
+    mt202Settlement = await MT202SettlementFactory.deploy(mockToken.address);
 
-        await mockToken.mint(mt202Settlement.target, ethers.parseEther("10000"));
+    await mockToken.mint(mt202Settlement.address, ethers.parseEther("10000"));
     });
 
     describe("Deployment", function () {
@@ -22,12 +22,12 @@ describe("MT202Settlement", function () {
         });
 
         it("Should set the right settlement token", async function () {
-            expect(await mt202Settlement.settlementToken()).to.equal(mockToken.target);
+            expect(await mt202Settlement.settlementToken()).to.equal(mockToken.address);
         });
     });
 
     describe("Settlement Intent Management", function () {
-        const instructionId = ethers.encodeBytes32String("test-instruction-1");
+    const instructionId = ethers.id("test-instruction-1");
         const amount = ethers.parseEther("100");
         const valueDate = Math.floor(Date.now() / 1000);
 
@@ -118,7 +118,7 @@ describe("MT202Settlement", function () {
 
         it("Should allow confirming a settled intent", async function () {
             await mt202Settlement.settleIntent(instructionId);
-            await expect(mt202Settleme_nt.confirmReconciliation(instructionId))
+            await expect(mt202Settlement.confirmReconciliation(instructionId))
                 .to.emit(mt202Settlement, "ConfirmedReconciled")
                 .withArgs(instructionId);
 

@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * Allows the owner to mint new tokens.
  */
 contract MockToken is ERC20, Ownable {
-    constructor(string memory name, string memory symbol) ERC20(name, symbol) Ownable(msg.sender) {}
+    constructor(string memory name, string memory symbol) ERC20(name, symbol) {}
 
     function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);

@@ -128,6 +128,18 @@ This demonstrates the intended workflow. Each script should be run in a separate
     python3 -m offchain.submit
     ```
 
+### Testing & CI
+
+Run the Hardhat tests locally (requires Node 18+ and a local Ethereum node for some tests):
+
+```bash
+npm ci
+npx hardhat test
+```
+
+CI is configured to run the same tests via GitHub Actions on pushes and PRs to `main`.
+
+
 ## Anomaly Detection Performance
 
 The Isolation Forest model was trained on a synthetic dataset of 1200 records and evaluated on 200 unseen validation records.

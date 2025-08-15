@@ -9,24 +9,24 @@ async function main() {
   const MockTokenFactory = await ethers.getContractFactory("MockToken");
   const mockToken = await MockTokenFactory.deploy("Mock Token", "MTK");
   await mockToken.waitForDeployment();
-  console.log("MockToken deployed to:", mockToken.target);
+  console.log("MockToken deployed to:", mockToken.address);
 
   // Deploy MT202Settlement
   const MT202SettlementFactory = await ethers.getContractFactory("MT202Settlement");
-  const mt202Settlement = await MT202SettlementFactory.deploy(mockToken.target);
+  const mt202Settlement = await MT202SettlementFactory.deploy(mockToken.address);
   await mt202Settlement.waitForDeployment();
-  console.log("MT202Settlement deployed to:", mt202Settlement.target);
+  console.log("MT202Settlement deployed to:", mt202Settlement.address);
 
   // Mint tokens to the settlement contract
   const mintAmount = ethers.parseEther("10000");
-  await mockToken.mint(mt202Settlement.target, mintAmount);
+  await mockToken.mint(mt202Settlement.address, mintAmount);
   console.log(`Minted ${ethers.formatEther(mintAmount)} MTK to the settlement contract.`);
 
   // --- Verification ---
   console.log("\n--- Running Verification Checks ---");
 
   // 1. Create a settlement intent
-  const instructionId = ethers.encodeBytes32String("verify-inst-1");
+  const instructionId = ethers.id("verify-inst-1");
   const amount = ethers.parseEther("150");
   const valueDate = Math.floor(Date.now() / 1000);
 
@@ -42,13 +42,20 @@ async function main() {
       "VERIFY_ORDER_BANK",
       "VERIFY_BENE_BANK"
     );
-    const receipt = await tx.wait();
-    const event = receipt.logs.find(log => log.fragment.name === 'IntentCreated');
-    if (event) {
-        console.log("✅ SUCCESS: IntentCreated event emitted.");
-    } else {
-        console.log("❌ FAILURE: IntentCreated event not emitted.");
+  const receipt = await tx.wait();
+  const found = receipt.logs.some(l => {
+    try {
+      const parsed = mt202Settlement.interface.parseLog(l);
+      return parsed && parsed.name === 'IntentCreated';
+    } catch (_) {
+      return false;
     }
+  });
+  if (found) {
+    console.log("✅ SUCCESS: IntentCreated event emitted.");
+  } else {
+    console.log("❌ FAILURE: IntentCreated event not emitted.");
+  }
   } catch (e) {
     console.error("❌ FAILURE: Creating intent failed:", e.message);
   }
