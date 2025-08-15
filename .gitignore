@@ -1,3 +1,11 @@
+node_modules/
+venv/
+.env
+.pytest_cache/
+.env.local
+reconciliation.db
+__pycache__/
+ml/*.joblib
 # Node
 node_modules
 npm-debug.log
