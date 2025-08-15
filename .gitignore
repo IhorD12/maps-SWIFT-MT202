@@ -1,0 +1,23 @@
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+env/
+
+# Build artifacts
+build/
+dist/
+*.gem
+*.egg
+
+# Other
+.DS_Store
+/sample_data/*.json
+/sample_data/*.csv
+/ml/*.joblib
